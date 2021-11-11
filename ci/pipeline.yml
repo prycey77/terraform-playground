@@ -1,0 +1,30 @@
+---
+resource_types:
+  - name: terraform
+    type: registry-image
+    source:
+      repository: ljfranklin/terraform-resource
+      tag: "1.0.10"
+
+resources:
+	- name: code-repo
+		type: git
+		icon: github
+		source:
+			uri: git@github.com:prycey77/terraform-playground.git
+
+	- name: golang-1.13.x-image
+		type: registry-image
+		icon: docker
+		source:
+			repository: golang
+			tag: 1.13-stretch
+
+jobs:
+- name: set-pipeline
+	serial: true
+	plan:
+	- get: code-repo
+		trigger: true
+	- set_pipeline: self
+		file: terraform-playground/ci/pipeline.yml
